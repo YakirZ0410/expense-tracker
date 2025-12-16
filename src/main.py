@@ -52,6 +52,23 @@ def plot_expenses_by_month(by_month, output_path):
     plt.savefig(output_path)
     plt.close()
 
+def compute_kpis(df):
+    total = df["amount"].sum()
+    top_category = df.groupby("category")["amount"].sum().idxmax()
+    avg_tx = df["amount"].mean()
+    return total, top_category, avg_tx
+
+def plot_top_expenses(df, output_path, n=5):
+    top = df.sort_values("amount", ascending=False).head(n)  # לוקח את N ההוצאות הגדולות
+    labels = top["description"] + " (" + top["category"] + ")"  # טקסט לכל עמודה
+
+    ax = top.set_index(labels)["amount"].plot(kind="bar", title=f"Top {n} Expenses")
+    ax.set_xlabel("")
+    ax.set_ylabel("Amount")
+    plt.tight_layout()
+    plt.savefig(output_path)
+    plt.close()
+
 
 if __name__ == "__main__":
     expenses = load_expenses("data/expenses.csv")
@@ -80,5 +97,12 @@ if __name__ == "__main__":
     plot_expenses_by_month(by_month, "docs/expenses_by_month.png")
     print("Saved chart: docs/expenses_by_month.png")
 
+    total_kpi, top_cat_kpi, avg_tx_kpi = compute_kpis(expenses)
 
+    print("\nKPI Summary:")
+    print(f"- Total spent: {total_kpi:.2f}")
+    print(f"- Top category: {top_cat_kpi}")
+    print(f"- Average transaction: {avg_tx_kpi:.2f}")
 
+    plot_top_expenses(expenses, "docs/top_expenses.png", n=5)
+    print("Saved chart: docs/top_expenses.png")
