@@ -69,9 +69,31 @@ def plot_top_expenses(df, output_path, n=5):
     plt.savefig(output_path)
     plt.close()
 
+def export_category_report(df, output_path):
+    summary = (
+        df.groupby("category")["amount"]
+        .sum()
+        .reset_index()
+        .rename(columns={"amount": "total_amount"})
+    )
+
+    summary["percentage"] = summary["total_amount"] / summary["total_amount"].sum() * 100
+    summary = summary.sort_values("total_amount", ascending=False)
+
+    summary.to_csv(output_path, index=False)
+
+def validate_expenses(df):
+    if df["amount"].isnull().any():
+        raise ValueError("Found missing values in amount")
+
+    if (df["amount"] < 0).any():
+        raise ValueError("Found negative expense values")
+
 
 if __name__ == "__main__":
     expenses = load_expenses("data/expenses.csv")
+    validate_expenses(expenses)
+
     total = total_expenses(expenses)
     print(f"Total expenses: {total}")
 
@@ -106,3 +128,6 @@ if __name__ == "__main__":
 
     plot_top_expenses(expenses, "docs/top_expenses.png", n=5)
     print("Saved chart: docs/top_expenses.png")
+
+    export_category_report(expenses, "docs/category_report.csv")
+    print("Saved report: docs/category_report.csv")

@@ -33,3 +33,6 @@ A simple Python project for tracking personal expenses and analyzing spending pa
 ![Expenses by Category](docs/expenses_by_category.png)
 ![Expenses by Month](docs/expenses_by_month.png)
 ![Top Expenses](docs/top_expenses.png)
+
+## Reports
+- `docs/category_report.csv` – summary of expenses by category with percentages
