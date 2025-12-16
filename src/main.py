@@ -44,6 +44,14 @@ def plot_expenses_by_category(by_category, output_path):
     plt.savefig(output_path)
     plt.close()
 
+def plot_expenses_by_month(by_month, output_path):
+    ax = by_month.plot(kind="line", marker="o", title="Expenses by Month")
+    ax.set_xlabel("Month")
+    ax.set_ylabel("Amount")
+    plt.tight_layout()
+    plt.savefig(output_path)
+    plt.close()
+
 
 if __name__ == "__main__":
     expenses = load_expenses("data/expenses.csv")
@@ -68,6 +76,9 @@ if __name__ == "__main__":
 
     plot_expenses_by_category(by_category, "docs/expenses_by_category.png")
     print("\nSaved chart: docs/expenses_by_category.png")
+
+    plot_expenses_by_month(by_month, "docs/expenses_by_month.png")
+    print("Saved chart: docs/expenses_by_month.png")
 
 
 
