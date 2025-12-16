@@ -1,10 +1,10 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def load_expenses(csv_path):
     df = pd.read_csv(csv_path)
     df["date"] = pd.to_datetime(df["date"])  # convert string -> datetime
     return df
-
 
 def total_expenses(df):
     return df["amount"].sum()
@@ -36,6 +36,14 @@ def filter_expenses(df, category=None, month=None):
 
     return result
 
+def plot_expenses_by_category(by_category, output_path):
+    ax = by_category.plot(kind="bar", title="Expenses by Category")
+    ax.set_xlabel("Category")
+    ax.set_ylabel("Amount")
+    plt.tight_layout()
+    plt.savefig(output_path)
+    plt.close()
+
 
 if __name__ == "__main__":
     expenses = load_expenses("data/expenses.csv")
@@ -57,5 +65,9 @@ if __name__ == "__main__":
     food_january = filter_expenses(expenses, category="Food", month=1)
     print("\nFood expenses in January:")
     print(food_january[["date", "description", "amount"]])
+
+    plot_expenses_by_category(by_category, "docs/expenses_by_category.png")
+    print("\nSaved chart: docs/expenses_by_category.png")
+
 
 

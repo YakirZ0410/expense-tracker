@@ -23,3 +23,7 @@ A simple Python project for tracking personal expenses and analyzing spending pa
 - [ ] Add expense categories
 - [ ] Monthly analysis
 - [ ] Visual charts
+
+## Demo
+![Expenses by Category](docs/expenses_by_category.png)
+
