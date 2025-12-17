@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Tracker</title>
+
+  <!-- מחבר את קובץ העיצוב -->
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Expense Tracker</h1>
+    <p class="subtitle">Add an expense quickly</p>
+
+    <form id="expense-form" class="card">
+      <label>
+        Date
+        <input type="date" name="date" required />
+      </label>
+
+      <label>
+        Amount
+        <input type="number" step="0.01" name="amount" placeholder="48.00" required />
+      </label>
+
+      <label>
+        Category
+        <input type="text" name="category" placeholder="Food" required />
+      </label>
+
+      <label>
+        Description
+        <input type="text" name="description" placeholder="Coffee and sandwich" required />
+      </label>
+
+      <button type="submit">Save Expense</button>
+
+      <p id="status" class="status"></p>
+    </form>
+  </main>
+
+  <!-- מחבר את קובץ ה-JavaScript (בסוף כדי שה-HTML ייטען קודם) -->
+  <script src="./script.js"></script>
+</body>
+</html>

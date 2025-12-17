@@ -4,8 +4,11 @@ import sqlite3
 from typing import Optional
 from fastapi.responses import HTMLResponse
 from fastapi import Form
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Expense Tracker API")
+app.mount("/app", StaticFiles(directory="frontend", html=True), name="frontend")
+
 conn = sqlite3.connect("expenses.db", check_same_thread=False)
 cursor = conn.cursor()
 
@@ -74,16 +77,17 @@ class Expense(BaseModel):
     amount: float
     category: str
     description: str
+    date: str  # format: YYYY-MM-DD
+
 
 
 @app.post("/expenses")
 def create_expense(expense: Expense):
     cursor.execute(
-        "INSERT INTO expenses (amount, category, description) VALUES (?, ?, ?)",
-        (expense.amount, expense.category, expense.description),
+        "INSERT INTO expenses (amount, category, description, date) VALUES (?, ?, ?, ?)",
+        (expense.amount, expense.category, expense.description, expense.date),
     )
     conn.commit()
-
     return {"message": "Expense saved to database"}
 
 
