@@ -2,8 +2,6 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import sqlite3
 from typing import Optional
-from fastapi.responses import HTMLResponse
-from fastapi import Form
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Expense Tracker API")
@@ -12,65 +10,9 @@ app.mount("/app", StaticFiles(directory="frontend", html=True), name="frontend")
 conn = sqlite3.connect("expenses.db", check_same_thread=False)
 cursor = conn.cursor()
 
-expenses_storage = []
-
 @app.get("/")
 def root():
     return {"message": "Expense Tracker API is running"}
-
-@app.get("/form", response_class=HTMLResponse)
-def expense_form():
-    return """
-    <html>
-      <head><title>Add Expense</title></head>
-      <body>
-        <h2>Add Expense</h2>
-
-        <form method="post" action="/submit">
-          <label>Date:</label><br/>
-          <input type="date" name="date" required><br/><br/>
-
-          <label>Amount:</label><br/>
-          <input type="number" step="0.01" name="amount" required><br/><br/>
-
-          <label>Category:</label><br/>
-          <input type="text" name="category" required><br/><br/>
-
-          <label>Description:</label><br/>
-          <input type="text" name="description" required><br/><br/>
-
-          <button type="submit">Save</button>
-        </form>
-
-      </body>
-    </html>
-    """
-
-
-@app.post("/submit", response_class=HTMLResponse)
-def submit_expense(
-    amount: float = Form(...),
-    category: str = Form(...),
-    description: str = Form(...),
-    date: str = Form(...),
-):
-    cursor.execute(
-    "INSERT INTO expenses (amount, category, description, date) VALUES (?, ?, ?, ?)",
-    (amount, category, description, date),
-)
-    conn.commit()
-
-
-    return """
-    <html>
-      <body>
-        <h3>Saved ✅</h3>
-        <p>Your expense was saved to the database.</p>
-        <a href="/form">Add another expense</a><br/>
-        <a href="/expenses">View all expenses (JSON)</a>
-      </body>
-    </html>
-    """
 
 
 class Expense(BaseModel):
