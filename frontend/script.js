@@ -1,10 +1,36 @@
 const form = document.getElementById("expense-form");
 const statusEl = document.getElementById("status");
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault(); // מונע מהדפדפן לעשות "רענון" רגיל של הטופס
+async function loadExpenses() {
+  console.log("loadExpenses() called"); // לבדיקה
 
-  // קורא את הערכים מהשדות בטופס
+  const res = await fetch("/expenses");
+  console.log("GET /expenses status:", res.status); // לבדיקה
+
+  const expenses = await res.json();
+
+  const tbody = document.querySelector("#expenses-table tbody");
+  tbody.innerHTML = "";
+
+  expenses.forEach((e) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${e.date}</td>
+      <td>${Number(e.amount).toFixed(2)}</td>
+      <td>${e.category}</td>
+      <td>${e.description}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  loadExpenses();
+});
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
   const formData = new FormData(form);
 
   const payload = {
@@ -17,7 +43,6 @@ form.addEventListener("submit", async (event) => {
   statusEl.textContent = "Saving...";
 
   try {
-    // שולח POST ל-API שלך
     const res = await fetch("/expenses", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -30,14 +55,17 @@ form.addEventListener("submit", async (event) => {
     }
 
     statusEl.textContent = "Saved ✅";
-    statusEl.style.color = "#22c55e"; // ירוק
+    statusEl.style.color = "#22c55e";
     form.reset();
+
+    await loadExpenses(); // מרענן טבלה אחרי שמירה
 
     setTimeout(() => {
       statusEl.textContent = "";
     }, 3000);
   } catch (err) {
+    console.error(err);
     statusEl.textContent = "Failed to save expense ❌";
-    statusEl.style.color = "#ef4444"; // אדום
+    statusEl.style.color = "#ef4444";
   }
 });

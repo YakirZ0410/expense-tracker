@@ -1,10 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 import sqlite3
 from typing import Optional
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
 
 app = FastAPI(title="Expense Tracker API")
+templates = Jinja2Templates(directory="templates")
 app.mount("/app", StaticFiles(directory="frontend", html=True), name="frontend")
 
 conn = sqlite3.connect("expenses.db", check_same_thread=False)
@@ -103,4 +106,23 @@ if "date" not in cols:
     cursor.execute("ALTER TABLE expenses ADD COLUMN date TEXT")
     conn.commit()
 
+@app.get("/expenses/page")
+def expenses_page(request: Request):
+    cursor.execute("SELECT id, amount, category, description, date FROM expenses ORDER BY date DESC")
+    rows = cursor.fetchall()
+
+    expenses = []
+    for row in rows:
+        expenses.append({
+            "id": row[0],
+            "amount": row[1],
+            "category": row[2],
+            "description": row[3],
+            "date": row[4],
+        })
+
+    return templates.TemplateResponse(
+        "expenses.html",
+        {"request": request, "expenses": expenses}
+    )
 

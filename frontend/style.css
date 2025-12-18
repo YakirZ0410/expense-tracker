@@ -9,7 +9,7 @@ body {
 }
 
 .container {
-  max-width: 420px;
+  max-width: 900px;
   margin: 40px auto;
   padding: 0 16px;
 }
@@ -69,3 +69,88 @@ button:hover {
   min-height: 18px;
   color: #a7f3d0;
 }
+
+/* ===== Expenses Table ===== */
+#expenses-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 16px;
+  font-size: 0.95rem;
+  table-layout: fixed; /* חשוב כדי למנוע גלישת טקסט */
+}
+
+/* כותרות */
+#expenses-table thead th {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+/* תאים */
+#expenses-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #d1d5db;
+  vertical-align: middle;
+
+  /* טיפול בגלישת טקסט */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ריחוף על שורה */
+#expenses-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* מחיצות אנכיות */
+#expenses-table th:not(:last-child),
+#expenses-table td:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#expenses-table th:nth-child(1),
+#expenses-table td:nth-child(1) {
+  width: 120px; /* Date */
+}
+
+#expenses-table th:nth-child(2),
+#expenses-table td:nth-child(2) {
+  width: 100px; /* Amount */
+  text-align: right;
+}
+
+#expenses-table th:nth-child(3),
+#expenses-table td:nth-child(3) {
+  width: 120px; /* Category */
+}
+
+#expenses-table th:nth-child(4),
+#expenses-table td:nth-child(4) {
+  width: auto; /* Description */
+}
+
+#expenses-table td {
+  position: relative;
+}
+
+#expenses-table td:hover {
+  white-space: normal;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+#expenses-table {
+  min-width: 650px;
+}
+
